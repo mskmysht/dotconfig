@@ -1,21 +1,40 @@
 let g:python3_host_prog = substitute(system('which python3'),"\n","","")
 
+"dein Scripts-----------------------------
 if &compatible
-  set nocompatible
+  set nocompatible               " Be iMproved
 endif
-" Add the dein installation directory into runtimepath
+
+" Required:
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 
-if dein#load_state('~/.cache/dein')
+if dein#min#load_state('~/.cache/dein')
   call dein#begin('~/.cache/dein')
+
+  " Let dein manage dein
+  " Required:
+  call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
+
+  " Load external toml files
   call dein#load_toml('~/.config/nvim/dein.toml', {'lazy': 0})
   call dein#load_toml('~/.config/nvim/dein_lazy.toml', {'lazy': 1})
+
+  " Required:
   call dein#end()
   call dein#save_state()
 endif
 
+" Required:
 filetype plugin indent on
 syntax enable
+
+" If you want to install not installed plugins on startup.
+if dein#check_install()
+  call dein#install()
+endif
+
+"End dein Scripts-------------------------
+
 
 " If you have vim >=8.0 or Neovim >= 0.1.5
 if exists('+termguicolors')
@@ -59,52 +78,33 @@ nnoremap Y y$
 nmap + <C-a>
 nmap - <C-x>
 
-nnoremap s <Nop>
-nnoremap <silent> ss :split<CR>
-nnoremap <silent> sv :vsplit<CR>
+let mapleader = "\<Space>"
+nnoremap <silent> <Leader>s :split<CR>
+nnoremap <silent> <Leader>v :vsplit<CR>
 
-nnoremap sh <C-w>h
-nnoremap sj <C-w>j
-nnoremap sk <C-w>k
-nnoremap sl <C-w>l
-nnoremap sw <C-w>w
+nnoremap <Leader>h <C-w>h
+nnoremap <Leader>j <C-w>j
+nnoremap <Leader>k <C-w>k
+nnoremap <Leader>l <C-w>l
+nnoremap <Leader>w <C-w>w
 
-nnoremap sH <C-w>H
-nnoremap sJ <C-w>J
-nnoremap sK <C-w>K
-nnoremap sL <C-w>L
-nnoremap sR <C-w>R
+nnoremap <Leader>H <C-w>H
+nnoremap <Leader>J <C-w>J
+nnoremap <Leader>K <C-w>K
+nnoremap <Leader>L <C-w>L
+nnoremap <Leader>R <C-w>R
 
-nnoremap so <C-w>_<C-w>|
-nnoremap s= <C-w>=
-nnoremap s> <C-w>>
-nnoremap s< <C-w><
-nnoremap s+ <C-w>+
-nnoremap s- <C-w>-
+nnoremap <Leader>o <C-w><Bar><C-w>_
+nnoremap <Leader>= <C-w>=
+nnoremap <Leader>> <C-w>>
+nnoremap <Leader>< <C-w><
+nnoremap <Leader>+ <C-w>+
+nnoremap <Leader>- <C-w>-
 
-nnoremap <silent> st :tabnew<CR>
-nnoremap sn gt
-nnoremap sp gT
+nnoremap <silent> <Leader>t :tabnew<CR>
+nnoremap <Leader>n gt
+nnoremap <Leader>p gT
 
-nnoremap <silent> sq :q<CR>
-nnoremap <silent> sQ :bd<CR>
-
-call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
-call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
-call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
-call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
-call submode#map('bufmove', 'n', '', '>', '<C-w>>')
-call submode#map('bufmove', 'n', '', '<', '<C-w><')
-call submode#map('bufmove', 'n', '', '+', '<C-w>+')
-call submode#map('bufmove', 'n', '', '-', '<C-w>-')
-
-call submode#enter_with('indent', 'n', '', '>', '>>')
-call submode#enter_with('indent', 'n', '', '<', '<<')
-call submode#map('indent', 'n', '', '>', '>>')
-call submode#map('indent', 'n', '', '<', '<<')
-
-call submode#enter_with('v-indent', 'v', '', '>', '>gv')
-call submode#enter_with('v-indent', 'v', '', '<', '<gv')
-call submode#map('v-indent', 'v', '', '>', '>gv')
-call submode#map('v-indent', 'v', '', '<', '<gv')
+nnoremap <silent> <Leader>q :q<CR>
+nnoremap <silent> <Leader>Q :bd<CR>
 
