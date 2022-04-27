@@ -1,5 +1,99 @@
 [[plugins]]
-repo = 'Shougo/dein.vim'
+repo = 'Shougo/ddu-ui-ff'
+
+[[plugins]]
+repo = 'Shougo/ddu-source-file_rec'
+
+[[plugins]]
+repo = 'Shougo/ddu-source-rg'
+
+[[plugins]]
+repo = 'Shougo/ddu-filter-matcher_substring'
+
+[[plugins]]
+repo = 'Shougo/ddu-kind-file'
+
+[[plugins]]
+repo = 'Shougo/ddu.vim'
+hook_add = '''
+  call ddu#custom#patch_global({
+  \   'ui': 'ff',
+  \   'sources': [
+  \     {
+  \       'name': 'file_rec',
+  \       'params': {
+  \         'ignoredDirectories': ['.git', 'node_modules', 'vendor', '.next']
+  \       }
+  \     }
+  \   ],
+  \   'sourceOptions': {
+  \     '_': {
+  \       'matchers': ['matcher_substring'],
+  \     },
+  \   },
+  \   'filterParams': {
+  \     'matcher_substring': {
+  \       'highlightMatched': 'Title',
+  \     },
+  \   },
+  \   'kindOptions': {
+  \     'file': {
+  \       'defaultAction': 'open',
+  \     },
+  \   },
+  \   'uiParams': {
+  \     'ff': {
+  \       'startFilter': v:true,
+  \       'prompt': '> ',
+  \       'split': 'floating',
+  \     }
+  \   },
+  \ })
+
+  autocmd FileType ddu-ff call s:ddu_my_settings()
+  function! s:ddu_my_settings() abort
+    nnoremap <buffer><silent> <CR>
+      \ <Cmd>call ddu#ui#ff#do_action('itemAction', {'name': 'open', 'params': {'command': 'vsplit'}})<CR>
+
+    nnoremap <buffer><silent> <Space>
+      \ <Cmd>call ddu#ui#ff#do_action('itemAction', {'name': 'open', 'params': {'command': 'split'}})<CR>
+
+    nnoremap <buffer><silent> a
+      \ <Cmd>call ddu#ui#ff#do_action('openFilterWindow')<CR>
+
+    nnoremap <buffer><silent> p
+      \ <Cmd>call ddu#ui#ff#do_action('preview')<CR>
+
+    nnoremap <buffer><silent> <Esc>
+      \ <Cmd>call ddu#ui#ff#do_action('quit')<CR>
+  endfunction
+
+  autocmd FileType ddu-ff-filter call s:ddu_filter_my_settings()
+  function! s:ddu_filter_my_settings() abort
+    inoremap <buffer><silent> <CR>
+      \ <Esc><Cmd>close<CR>
+
+    inoremap <buffer><silent> <Esc>
+      \ <Esc><Cmd>close<CR>
+
+    nnoremap <buffer><silent> <CR>
+      \ <Cmd>close<CR>
+
+    nnoremap <buffer><silent> <Esc>
+      \ <Cmd>close<CR>
+  endfunction
+
+  nmap <silent> ;f <Cmd>call ddu#start({})<CR>
+  nmap <silent> ;g <Cmd>call ddu#start({
+  \   'name': 'grep',
+  \   'sources':[
+  \     {'name': 'rg', 'params': {'input': expand('<cword>')}}
+  \   ],
+  \ })<CR>
+'''
+
+[[plugins]]
+repo = 'vim-denops/denops.vim'
 
 [[plugins]]
 repo = 'Shougo/context_filetype.vim'
@@ -43,6 +137,27 @@ hook_add = '''
 
 [[plugins]]
 repo = 'kana/vim-submode'
+hook_add = '''
+  let mapleader = "\<Space>"
+  call submode#enter_with('bufmove', 'n', '', '<Leader>>', '<C-w>>')
+  call submode#enter_with('bufmove', 'n', '', '<Leader><', '<C-w><')
+  call submode#enter_with('bufmove', 'n', '', '<Leader>+', '<C-w>+')
+  call submode#enter_with('bufmove', 'n', '', '<Leader>-', '<C-w>-')
+  call submode#map('bufmove', 'n', '', '>', '<C-w>>')
+  call submode#map('bufmove', 'n', '', '<', '<C-w><')
+  call submode#map('bufmove', 'n', '', '+', '<C-w>+')
+  call submode#map('bufmove', 'n', '', '-', '<C-w>-')
+
+  call submode#enter_with('indent', 'n', '', '>', '>>')
+  call submode#enter_with('indent', 'n', '', '<', '<<')
+  call submode#map('indent', 'n', '', '>', '>>')
+  call submode#map('indent', 'n', '', '<', '<<')
+
+  call submode#enter_with('v-indent', 'v', '', '>', '>gv')
+  call submode#enter_with('v-indent', 'v', '', '<', '<gv')
+  call submode#map('v-indent', 'v', '', '>', '>gv')
+  call submode#map('v-indent', 'v', '', '<', '<gv')
+'''
 
 [[plugins]]
 repo = 'easymotion/vim-easymotion'
@@ -65,28 +180,6 @@ hook_add = '''
   if has('conceal')
     setlocal conceallevel=0
   endif
-'''
-
-[[plugins]]
-repo = 'Shougo/denite.nvim'
-hook_add = '''
-  nnoremap [denite] <Nop>
-  nmap <C-m> [denite]
-  nnoremap <silent> [denite]g :<C-u>Denite grep -buffer-name=search-buffer-denite<CR>
-  nnoremap <silent> [denite]r :<C-u>Denite -resume -buffer-name=search-buffer-denite<CR>
-  nnoremap <silent> [denite]p :<C-u>Denite file_rec<CR>
-  call denite#custom#option('default', 'prompt', '>')
-  call denite#custom#option('_', 'highlight_matched_range', 'None')
-  call denite#custom#option('_', 'highlight_matched_char', 'None')
-  call denite#custom#map('insert', "<Tab>", '<denite:move_to_next_line>')
-  call denite#custom#map('insert', "<S-Tab>", '<denite:move_to_previous_line>')
-  call denite#custom#map('insert', "<C-t>", '<denite:do_action:tabopen>')
-  call denite#custom#map('insert', "<C-v>", '<denite:do_action:vsplit>')
-  call denite#custom#map('normal', "v", '<denite:do_action:vsplit>')
-  call denite#custom#var('grep', 'command', ['pt', '--follow', '--nogroup', '--nocolor', '--hidden'])
-  call denite#custom#var('grep', 'default_opts', [])
-  call denite#custom#var('grep', 'recursive_opts', [])
-  call denite#custom#var('file_rec', 'command', ['pt', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', ''])
 '''
 
 [[plugins]]
@@ -115,77 +208,8 @@ hook_add = '''
   noremap <C-j> <C-^>
   imap <C-^> <Plug>(eskk:enable)
   let g:eskk#enable_completion = 1
-  let g:eskk#directory = "~/.eskk"
-  let g:eskk#dictionary = { 'path': "~/.skk-jisyo", 'sorted': 0, 'encoding': 'utf-8', }
-  let g:eskk#large_dictionary = { 'path': "~/.eskk/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp', }
+  let g:eskk#directory = "~/.config/eskk"
+  let g:eskk#dictionary = { 'path': "~/.cache/skk/skk-jisyo", 'sorted': 0, 'encoding': 'utf-8', }
+  let g:eskk#large_dictionary = { 'path': "~/.config/eskk/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp', }
 '''
 
-[[plugins]]
-repo = 'Shougo/defx.nvim'
-hook_add = '''
-  autocmd FileType defx call s:defx_my_settings()
-  function! s:defx_my_settings() abort
-    " Define mappings
-    nnoremap <silent><buffer><expr> <CR>
-    \ defx#do_action('open')
-    nnoremap <silent><buffer><expr> c
-    \ defx#do_action('copy')
-    nnoremap <silent><buffer><expr> m
-    \ defx#do_action('move')
-    nnoremap <silent><buffer><expr> p
-    \ defx#do_action('paste')
-    nnoremap <silent><buffer><expr> l
-    \ defx#do_action('open')
-    nnoremap <silent><buffer><expr> E
-    \ defx#do_action('open', 'vsplit')
-    nnoremap <silent><buffer><expr> P
-    \ defx#do_action('open', 'pedit')
-    nnoremap <silent><buffer><expr> o
-    \ defx#do_action('open_or_close_tree')
-    nnoremap <silent><buffer><expr> K
-    \ defx#do_action('new_directory')
-    nnoremap <silent><buffer><expr> N
-    \ defx#do_action('new_file')
-    nnoremap <silent><buffer><expr> M
-    \ defx#do_action('new_multiple_files')
-    nnoremap <silent><buffer><expr> C
-    \ defx#do_action('toggle_columns',
-    \                'mark:indent:icon:filename:type:size:time')
-    nnoremap <silent><buffer><expr> S
-    \ defx#do_action('toggle_sort', 'time')
-    nnoremap <silent><buffer><expr> d
-    \ defx#do_action('remove')
-    nnoremap <silent><buffer><expr> r
-    \ defx#do_action('rename')
-    nnoremap <silent><buffer><expr> !
-    \ defx#do_action('execute_command')
-    nnoremap <silent><buffer><expr> x
-    \ defx#do_action('execute_system')
-    nnoremap <silent><buffer><expr> yy
-    \ defx#do_action('yank_path')
-    nnoremap <silent><buffer><expr> .
-    \ defx#do_action('toggle_ignored_files')
-    nnoremap <silent><buffer><expr> ;
-    \ defx#do_action('repeat')
-    nnoremap <silent><buffer><expr> h
-    \ defx#do_action('cd', ['..'])
-    nnoremap <silent><buffer><expr> ~
-    \ defx#do_action('cd')
-    nnoremap <silent><buffer><expr> q
-    \ defx#do_action('quit')
-    nnoremap <silent><buffer><expr> <Space>
-    \ defx#do_action('toggle_select') . 'j'
-    nnoremap <silent><buffer><expr> *
-    \ defx#do_action('toggle_select_all')
-    nnoremap <silent><buffer><expr> j
-    \ line('.') == line('$') ? 'gg' : 'j'
-    nnoremap <silent><buffer><expr> k
-    \ line('.') == 1 ? 'G' : 'k'
-    nnoremap <silent><buffer><expr> <C-l>
-    \ defx#do_action('redraw')
-    nnoremap <silent><buffer><expr> <C-g>
-    \ defx#do_action('print')
-    nnoremap <silent><buffer><expr> cd
-    \ defx#do_action('change_vim_cwd')
-  endfunction
-'''
