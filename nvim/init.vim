@@ -67,6 +67,7 @@ set shiftwidth=2
 set expandtab
 set nowrap
 set mouse=a
+set sidescrolloff=2
 
 nnoremap j gj
 nnoremap k gk
