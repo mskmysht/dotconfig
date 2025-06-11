@@ -93,8 +93,6 @@ set list
 set listchars=tab:▸\ ,eol:↲,extends:❯,precedes:❮
 set backspace=indent,eol,start
 set foldmethod=marker
-set tabstop=2
-set shiftwidth=2
 set expandtab
 set nowrap
 set mouse=a
@@ -140,3 +138,22 @@ nnoremap <Leader>p gT
 nnoremap <silent> <Leader>q :q<CR>
 nnoremap <silent> <Leader>Q :bd<CR>
 
+augroup vimrc
+  autocmd! 
+  autocmd Filetype gitconfig \
+    setlocal noexpandtab softtabstop=4 shiftwidth=4 tabstop=4
+  autocmd Filetype gitcommit \
+    setlocal expandtab   softtabstop=2 shiftwidth=2 tabstop=2
+  autocmd Filetype gitcommit \
+    setlocal spell
+  autocmd Filetype rust \
+    setlocal expandtab softtabstop=4 shiftwidth=4 tabstop=4 matchpairs+=<:>
+  " autocmd Filetype javascript setlocal expandtab   softtabstop=4 shiftwidth=4 tabstop=4
+  " autocmd Filetype typescript setlocal expandtab   softtabstop=4 shiftwidth=4 tabstop=4
+  " autocmd Filetype javascript,typescript inoremap <buffer> <C-CR> <End>;<CR>
+  " autocmd Filetype javascript,typescript inoremap <buffer> jk <End>;
+  " autocmd Filetype help                  nnoremap <buffer> q ZZ
+augroup END
+
+set tabstop=2
+set shiftwidth=2
