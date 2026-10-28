@@ -13,8 +13,11 @@ vim.opt.listchars = {
     conceal = "¤",  -- Character used for concealed text
     nbsp = "␣",     -- Non-breaking space
 }
-vim.api.nvim_set_keymap('i', '<C-j>', '<Plug>(skkeleton-enable)', {noremap = true})
-vim.api.nvim_set_keymap('c', '<C-j>', '<Plug>(skkeleton-enable)', {noremap = true})
-vim.api.nvim_set_keymap('i', '<C-l>', '<Plug>(skkeleton-disable)', {noremap = true})
-vim.api.nvim_set_keymap('c', '<C-l>', '<Plug>(skkeleton-disable)', {noremap = true})
+vim.g.mapleader = ' '
+vim.keymap.set('i', '<C-j>', '<Plug>(skkeleton-enable)', {noremap = true})
+vim.keymap.set('c', '<C-j>', '<Plug>(skkeleton-enable)', {noremap = true})
+vim.keymap.set('i', '<C-l>', '<Plug>(skkeleton-disable)', {noremap = true})
+vim.keymap.set('c', '<C-l>', '<Plug>(skkeleton-disable)', {noremap = true})
+vim.keymap.set('n', '<leader>,', '<Cmd>BufferPrevious<CR>', {noremap = true, silent = true})
+vim.keymap.set('n', '<leader>.', '<Cmd>BufferNext<CR>', {noremap = true, silent = true})
 
